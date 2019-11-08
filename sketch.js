@@ -28,6 +28,7 @@ function setup () {
     
     /**
      * Initialize the grid. 
+     * - Add neighbors. 
      */
     w = width / cols;
     h = height / rows;
@@ -35,6 +36,7 @@ function setup () {
         for (let j = 0; j < rows; j++)
             grid[i][j] = new Spot(i, j);
     }
+    grid.forEach(col_elements => col_elements.forEach(spot => spot.addNeighbors(grid)));
     
     /**
      * Set start and end values. 
@@ -62,13 +64,35 @@ function draw () {
             if (spot.f < openSet[winner].f)
                 winner = index;
         });
+        let current = openSet[winner];
         /**
          * If winner is the end then we have reached the solution. 
          */
-        if (openSet[winner] ==  end) {
+        if (current === end) {
             noLoop();
             console.log("DONE!!!!")
         }
+
+        /**
+         * Remove the current from open set and add it to the closed set. 
+         */
+        removeFromArray(openSet, current);
+        closedSet.push(current);
+        /**
+         * Process each neighbor the current. 
+         */
+        let neighbors = current.neighbors;
+        neighbors.forEach((neighbor, index) => {
+            /**
+             * If it is not in the closed set. Means it is not already processed. 
+             */
+            if (!closedSet.includes(neighbor)) {
+                /**
+                 * tentative_gScore is the distance from start to the neighbor through current
+                 */
+                let tentativeGScore = current.g + 1;
+            }
+        })
     } else {
 
     }
@@ -90,3 +114,14 @@ function draw () {
 
 
 }   //  End of draw function. 
+
+/**
+ * Removes an element from the array specified. 
+ */
+function removeFromArray (arr, element) {
+    for (let i = arr.length - 1; i >= 0; i--) 
+        if (arr[i] == element) {
+            arr.splice(i, 1);
+            break;
+        }    
+}
