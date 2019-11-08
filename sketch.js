@@ -4,8 +4,8 @@ const CWIDTH = 400,
 /**
  * Grid related variables.
  */
-var rows = 20,
-  cols = 20,
+var rows = 30,
+  cols = 30,
   w,
   h,
   grid;
@@ -21,13 +21,13 @@ var openSet = [],
  */
 var pause = false;
 /**
- * For final result. 
+ * For final result.
  */
 var path = [];
 
 function setup() {
   createCanvas(CWIDTH, CHEIGHT);
-//   frameRate(1);
+  // frameRate(1);
   /**
    * Create a 2d array.
    */
@@ -53,6 +53,8 @@ function setup() {
    */
   start = grid[0][0];
   end = grid[cols - 1][rows - 1];
+  start.wall = false;
+  end.wall = false;
   openSet.push(start);
 }
 
@@ -76,11 +78,8 @@ function draw() {
    * Draw the closed set.
    * - Red color.
    */
-  closedSet.forEach(spot => spot.show(color(255, 0, 0)));  
-  /**
-   * Print the final path if found. 
-   */
-  path.forEach(spot => spot.show(color(0, 0, 255)));
+  closedSet.forEach(spot => spot.show(color(255, 0, 0)));
+
   /**
    * While loop condition.
    */
@@ -93,17 +92,20 @@ function draw() {
       if (spot.f < openSet[winner].f) winner = index;
     });
     let current = openSet[winner];
-    fill(0);
-    rect (current.x * w, current.y * h, w, h);
     /**
      * If winner is the end then we have reached the solution.
      */
     if (current === end) {
       console.log("DONE!!!!");
       /**
-       * Find and print the path back to the starting node. 
+       * Find and print the path back to the starting node.
        */
-      storePath (current);
+      storePath(current);
+      /**
+       * Print the final path if found.
+       */
+      path.forEach(spot => spot.show(color(0, 0, 255)));
+      noLoop();
     }
 
     /**
@@ -111,7 +113,7 @@ function draw() {
      */
     removeFromArray(openSet, current);
     closedSet.push(current);
-    storePath(current)
+    storePath(current);
     /**
      * Process each neighbor the current.
      */
@@ -120,7 +122,7 @@ function draw() {
       /**
        * If it is not in the closed set. Means it is not already processed.
        */
-      if (!closedSet.includes(neighbor)) {
+      if (!closedSet.includes(neighbor) && !neighbor.wall) {
         /**
          * tentative_gScore is the distance from start to the neighbor through current
          */
@@ -140,7 +142,7 @@ function draw() {
 
         /**
          * Educated guess
-         * - Here I have considered heuristic as Euclidian distance between neighbor and end
+         * - Here I have considered heuristic distance between neighbor and end
          */
         neighbor.h = heuristic(neighbor, end);
         /**
@@ -148,12 +150,15 @@ function draw() {
          */
         neighbor.f = neighbor.g + neighbor.h;
         /**
-         * Where did I came from. 
+         * Where did I came from.
          */
         neighbor.cameFrom = current;
       }
     });
   } else {
+    console.log("A*", "No Solution.");
+    path.forEach(spot => spot.show(color(0, 0, 255)));
+    noLoop();
   }
 } //  End of draw function.
 
@@ -172,31 +177,37 @@ function removeFromArray(arr, element) {
  * Finds the distance between a point and b point.
  */
 function heuristic(a, b) {
-  let d = dist(a.x, a.y, b.x, b.y);
+  /**
+   * Euclidian distance
+   */
+  // let d = dist(a.x, a.y, b.x, b.y);
+  /**
+   * Manhattan distance
+   */
+  let d = abs(a.x - b.x) + abs(a.y - b.y);
   return d;
 }
 
 /**
- * Pause function for dubugging point of view. 
+ * Pause function for dubugging point of view.
  */
-function keyPressed () {
-    if (key == 'p' || key == 'P') {
-        pause = !pause;
-        if (pause)
-            noLoop();
-        else loop();
-    }
+function keyPressed() {
+  if (key == "p" || key == "P") {
+    pause = !pause;
+    if (pause) noLoop();
+    else loop();
+  }
 }
 
 /**
- * Stores the path from destination to source using came from variable. 
+ * Stores the path from destination to source using came from variable.
  */
-function storePath (current) {
-    path = [];
-    let temp = current;
-    path.push(temp);
-    while (temp.cameFrom) {
-        path.push(temp.cameFrom);
-        temp = temp.cameFrom;
-    }
+function storePath(current) {
+  path = [];
+  let temp = current;
+  path.push(temp);
+  while (temp.cameFrom) {
+    path.push(temp.cameFrom);
+    temp = temp.cameFrom;
+  }
 }
