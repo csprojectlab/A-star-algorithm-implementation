@@ -27,7 +27,7 @@ var path = [];
 
 function setup() {
   createCanvas(CWIDTH, CHEIGHT);
-//   frameRate(20);
+  //   frameRate(20);
   /**
    * Create a 2d array.
    */
@@ -130,29 +130,36 @@ function draw() {
         /**
          * If neighbor is in the open set then try to update its g score.
          */
+        let newPath = false;
         if (openSet.includes(neighbor)) {
           /**
            * If better g score is found.
            */
-          if (tentativeGScore < neighbor.g) neighbor.g = tentativeGScore;
+          if (tentativeGScore < neighbor.g) {
+            newPath = true;
+            neighbor.g = tentativeGScore;
+          }
         } else {
+          newPath = true;
           neighbor.g = tentativeGScore;
           openSet.push(neighbor);
         }
 
-        /**
-         * Educated guess
-         * - Here I have considered heuristic distance between neighbor and end
-         */
-        neighbor.h = heuristic(neighbor, end);
-        /**
-         * Update the f score of each node.
-         */
-        neighbor.f = neighbor.g + neighbor.h;
-        /**
-         * Where did I came from.
-         */
-        neighbor.cameFrom = current;
+        if (newPath) {
+          /**
+           * Educated guess
+           * - Here I have considered heuristic distance between neighbor and end
+           */
+          neighbor.h = heuristic(neighbor, end);
+          /**
+           * Update the f score of each node.
+           */
+          neighbor.f = neighbor.g + neighbor.h;
+          /**
+           * Where did I came from.
+           */
+          neighbor.cameFrom = current;
+        }
       }
     });
   } else {
@@ -180,7 +187,7 @@ function heuristic(a, b) {
   /**
    * Euclidian distance
    */
-  // let d = dist(a.x, a.y, b.x, b.y);
+//    let d = dist(a.x, a.y, b.x, b.y);
   /**
    * Manhattan distance
    */
