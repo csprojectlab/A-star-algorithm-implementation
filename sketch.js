@@ -4,8 +4,8 @@ const CWIDTH = 600,
 /**
  * Grid related variables.
  */
-var rows = 50,
-  cols = 50,
+var rows = 100,
+  cols = 100,
   w,
   h,
   grid;
@@ -67,7 +67,7 @@ function draw() {
    * Draw the grid.
    */
   grid.forEach(col_elements =>
-    col_elements.forEach(element => element.show(color(255)))
+    col_elements.forEach(element => element.show(color(240)))
   );
   /**
    * Draw the open set.
@@ -166,6 +166,7 @@ function draw() {
     console.log("A*", "No Solution.");
     path.forEach(spot => spot.show(color(0, 0, 255)));
     noLoop();
+    alert("A*: No solution for this space.");
   }
 } //  End of draw function.
 

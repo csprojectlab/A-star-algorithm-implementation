@@ -22,9 +22,14 @@ class Spot {
    * Show function.
    * Takes color as an argument.
    */
-  show(col) {    
-    if (this.wall) fill(0);
-    else fill(col);
+  show(col) {
+    if (this.wall) {
+      stroke(0);
+      fill(0);
+    } else {
+      stroke(col);
+      fill(col);
+    }
     rect(this.x * w, this.y * h, w - 1, h - 1);
   }
 
