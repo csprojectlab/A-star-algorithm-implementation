@@ -12,6 +12,7 @@ class Spot {
          * Each spot will also keep track of its neighbors. 
          */
         this.neighbors = [];
+        this.cameFrom = undefined;
     }
 
     /**
