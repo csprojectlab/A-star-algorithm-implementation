@@ -1,11 +1,11 @@
-const CWIDTH = 400,
-  CHEIGHT = 400;
+const CWIDTH = 600,
+  CHEIGHT = 600;
 
 /**
  * Grid related variables.
  */
-var rows = 30,
-  cols = 30,
+var rows = 50,
+  cols = 50,
   w,
   h,
   grid;
@@ -27,7 +27,7 @@ var path = [];
 
 function setup() {
   createCanvas(CWIDTH, CHEIGHT);
-  // frameRate(1);
+//   frameRate(20);
   /**
    * Create a 2d array.
    */

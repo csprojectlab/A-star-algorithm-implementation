@@ -15,14 +15,14 @@ class Spot {
     this.neighbors = [];
     this.cameFrom = undefined;
     this.wall = false;
-    if (random(1) < 0.4) this.wall = true;
+    if (random(1) < 0.35) this.wall = true;
   }
 
   /**
    * Show function.
    * Takes color as an argument.
    */
-  show(col) {
+  show(col) {    
     if (this.wall) fill(0);
     else fill(col);
     rect(this.x * w, this.y * h, w - 1, h - 1);
@@ -36,5 +36,19 @@ class Spot {
     if (this.x < cols - 1) this.neighbors.push(grid[this.x + 1][this.y]);
     if (this.y > 0) this.neighbors.push(grid[this.x][this.y - 1]);
     if (this.y < rows - 1) this.neighbors.push(grid[this.x][this.y + 1]);
+    /**
+     * Upper left
+     * Upper Right
+     * Bottom left
+     * Bottom right
+     */
+    if (this.x > 0 && this.y > 0)
+      this.neighbors.push(grid[this.x - 1][this.y - 1]);
+    if (this.x < cols - 1 && this.y > 0)
+      this.neighbors.push(grid[this.x + 1][this.y - 1]);
+    if (this.x > 0 && this.y < rows - 1)
+      this.neighbors.push(grid[this.x - 1][this.y + 1]);
+    if (this.x < cols - 1 && this.y < rows - 1)
+      this.neighbors.push(grid[this.x + 1][this.y + 1]);
   }
 }
